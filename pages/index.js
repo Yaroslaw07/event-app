@@ -1,7 +1,6 @@
 
 import EventList from "@/components/events/event-list";
 import { getFeaturedEvents } from "@/data/dummy_data";
-import { useEffect } from 'react';
 
 function HomePage() {
 
