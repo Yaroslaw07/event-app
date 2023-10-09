@@ -1,20 +1,26 @@
-import { Fragment } from "react";
-import { useRouter } from "next/router";
-
-import { getEventById } from "@/data/dummy_data";
-import EventContent from "@/components/events/event-content";
+import { getEventById, getFeaturedEvents } from "../../helpers/api-util";
 import EventSummary from "@/components/events/event-summary";
 import EventLogistics from "@/components/events/event-logistics";
+import EventContent from "@/components/events/event-content";
 
+function EventDetailPage(props) {
 
-function EventDetailPage() {
-  const router = useRouter();
+  if (props.notFound) {
+    return (
+      <div className="center">
+        <p>Event not found</p>
+      </div>
+    );
+  }
 
-  const eventId = router.query.eventId;
-  const event = getEventById(eventId);
+  const event = props.selectedEvent;
 
   if (!event) {
-    return <p>No event found!</p>;
+    return (
+      <div className="center">
+        <p>Loading...</p>
+      </div>
+    );
   }
 
   return (
@@ -22,7 +28,7 @@ function EventDetailPage() {
       <EventSummary title={event.title} />
       <EventLogistics
         date={event.date}
-        address={event.date}
+        address={event.location}
         image={event.image}
         imageAlt={event.title}
       />
@@ -31,6 +37,37 @@ function EventDetailPage() {
       </EventContent>
     </>
   );
+}
+
+export async function getStaticProps(context) {
+  const eventId = context.params.eventId;
+
+  const event = await getEventById(eventId);
+
+  if (!event) {
+    return {
+      notFound: true,
+    };
+  }
+
+  return {
+    props: {
+      selectedEvent: event,
+      notFound:false
+    },
+    revalidate: 30,
+  };
+}
+
+export async function getStaticPaths() {
+  const events = await getFeaturedEvents();
+
+  const paths = events.map((event) => ({ params: { eventId: event.id } }));
+
+  return {
+    paths: paths,
+    fallback: "blocking",
+  };
 }
 
 export default EventDetailPage;
