@@ -1,6 +1,8 @@
+
+
 export async function getAllEvents() {
   const response = await fetch(
-    process.env.FIREBASE_DB_URL + "events.json"
+    process.env.NEXT_PUBLIC_FIREBASE_DB_URL + "events.json"
   );
 
   const data = await response.json();
