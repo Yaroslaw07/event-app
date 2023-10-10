@@ -1,6 +1,6 @@
 import { getEventById, getFeaturedEvents } from "../../helpers/api-util";
 import EventSummary from "@/components/events/event-summary";
-import EventLogistics from "@/components/events/event-logistics";
+import EventLogistics from "@/components/event-detail/event-logistics";
 import EventContent from "@/components/events/event-content";
 
 function EventDetailPage(props) {
